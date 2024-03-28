@@ -1,4 +1,11 @@
-import { Dispatch, ReactNode, Reducer, createContext, useReducer } from "react";
+import {
+  Dispatch,
+  ReactNode,
+  Reducer,
+  createContext,
+  useContext,
+  useReducer,
+} from "react";
 import { Product } from "../types/types";
 
 type CartProduct = Product & {
@@ -6,11 +13,16 @@ type CartProduct = Product & {
 };
 enum ActionTypes {
   ADD = "cart/add",
+  CLEAR = "cart/clear",
 }
-type CartAction = {
-  type: ActionTypes;
-  payload?: any;
-};
+
+interface Action<A, P> {
+  type: A;
+  payload: P;
+}
+type AddToCart = Action<ActionTypes.ADD, CartProduct>;
+type ClearCart = Omit<Action<ActionTypes.CLEAR, null>, "payload">;
+type CartAction = AddToCart | ClearCart;
 type CartState = CartProduct[];
 type CartReducer = Reducer<CartState, CartAction>;
 
@@ -19,7 +31,7 @@ export const CartContext = createContext<[CartState, Dispatch<CartAction>]>([
   () => {},
 ]);
 
-export const addToCart = (product: Product, qty: number): CartAction => {
+export const addToCart = (product: Product, qty: number): AddToCart => {
   return {
     type: ActionTypes.ADD,
     payload: {
@@ -42,6 +54,8 @@ const cartReducer = (state: CartState, action: CartAction): CartState => {
       }
       return [...state, action.payload];
     }
+    case ActionTypes.CLEAR:
+      return [];
     default:
       return state;
   }
@@ -56,5 +70,7 @@ const CartContextProvider = ({ children }: { children: ReactNode }) => {
     </CartContext.Provider>
   );
 };
+
+export const useCart = () => useContext(CartContext);
 
 export default CartContextProvider;

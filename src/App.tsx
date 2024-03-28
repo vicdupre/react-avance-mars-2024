@@ -1,19 +1,21 @@
-import { useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
 import "./App.css";
-import { Products } from "./lib/types/types";
 import FormExemple from "./components/FormExemple";
 import ErrorBoundary from "./components/ErrorBoundary";
 import usePersitedState from "./lib/hooks/useLocalState";
-import { CartContext, addToCart } from "./lib/contexts/CartContext";
+import { addToCart, useCart } from "./lib/contexts/CartContext";
+import useProducts from "./lib/stores/products";
+import ProductsListTitle from "./components/ProductsListTitle";
 
 function App() {
   const [count, setCount] = usePersitedState<number>("count", 0);
-  const [products, setProducts] = useState<Products>([]);
+
+  const { products, loading, isLoaded, error, fetchData } = useProducts();
   const [maxId, setMaxId] = useState(5);
 
-  const [cart, dispatch] = useContext(CartContext);
+  const [cart, dispatch] = useCart();
   console.log("cart", cart);
 
   const filteredProducts = useMemo(() => {
@@ -22,21 +24,13 @@ function App() {
 
   const handleClick = useCallback(() => {
     setCount((count) => count + 1);
-  }, []);
+  }, [setCount]);
 
   useEffect(() => {
-    /* const getData = async () => {
-      const res = await fetch("https://fakestoreapi.com/products");
-      const json = await res.json();
-      setProducts(json);
-    };
-    getData(); */
-    (async () => {
-      const res = await fetch("https://fakestoreapi.com/products");
-      const json = await res.json();
-      setProducts(json);
-    })();
-  }, []);
+    if (!isLoaded) {
+      fetchData();
+    }
+  }, [isLoaded, fetchData]);
 
   useEffect(() => {
     console.log("count", count);
@@ -89,6 +83,9 @@ function App() {
           +
         </button>
       </div>
+      {loading && <p>Chargement...</p>}
+      {error && <p>{error.message}</p>}
+      <ProductsListTitle />
       <ul>
         {filteredProducts.map((product) => (
           <li onClick={() => dispatch(addToCart(product, 1))} key={product.id}>
