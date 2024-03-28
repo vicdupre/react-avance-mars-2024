@@ -5,9 +5,9 @@ import "./App.css";
 import FormExemple from "./components/FormExemple";
 import ErrorBoundary from "./components/ErrorBoundary";
 import usePersitedState from "./lib/hooks/useLocalState";
-import { addToCart, useCart } from "./lib/contexts/CartContext";
 import useProducts from "./lib/stores/products";
 import ProductsListTitle from "./components/ProductsListTitle";
+import useCart from "./lib/stores/cart";
 
 function App() {
   const [count, setCount] = usePersitedState<number>("count", 0);
@@ -15,7 +15,8 @@ function App() {
   const { products, loading, isLoaded, error, fetchData } = useProducts();
   const [maxId, setMaxId] = useState(5);
 
-  const [cart, dispatch] = useCart();
+  // const [cart, dispatch] = useCart();
+  const { cart, add } = useCart();
   console.log("cart", cart);
 
   const filteredProducts = useMemo(() => {
@@ -88,7 +89,7 @@ function App() {
       <ProductsListTitle />
       <ul>
         {filteredProducts.map((product) => (
-          <li onClick={() => dispatch(addToCart(product, 1))} key={product.id}>
+          <li onClick={() => add(product, 1)} key={product.id}>
             {product.title}
           </li>
         ))}
