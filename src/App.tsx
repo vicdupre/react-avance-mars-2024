@@ -8,6 +8,7 @@ import usePersitedState from "./lib/hooks/useLocalState";
 import useProducts from "./lib/stores/products";
 import ProductsListTitle from "./components/ProductsListTitle";
 import useCart from "./lib/stores/cart";
+import Mouse from "./components/Mouse";
 
 function App() {
   const [count, setCount] = usePersitedState<number>("count", 0);
@@ -40,6 +41,9 @@ function App() {
   return (
     <>
       <div>
+        <Mouse>
+          {({ x, y }) => <p>Coordonnées de la souris : ({`${x};${y}`})</p>}
+        </Mouse>
         <a href="https://vitejs.dev" target="_blank">
           <img src={viteLogo} className="logo" alt="Vite logo" />
         </a>
