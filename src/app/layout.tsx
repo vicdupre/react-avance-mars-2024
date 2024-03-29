@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 
 import "./globals.css";
 import Image from "next/image";
+import StyledComponentsRegistry from "@/lib/registery";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
@@ -19,14 +20,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <p> I'm the root layout</p>
-        <Image
-          src={"/formation-next-js.png"}
-          alt="Logo"
-          width={100}
-          height={70}
-        />
-        {children}
+        <StyledComponentsRegistry>{children}</StyledComponentsRegistry>
       </body>
     </html>
   );

@@ -4,6 +4,7 @@ import { updatePost } from "@/lib/postsActions";
 import { Post } from "@/lib/types";
 import SubmitButton from "@/ui/Buttons/SubmitButton";
 import { useFormState } from "react-dom";
+import styles from "./posts.module.css";
 
 type Props = {
   post?: Post;
@@ -25,7 +26,7 @@ const PostForm = ({ post, action }: Props) => {
   const [state, formAction] = useFormState(action, initialState);
 
   return (
-    <form action={formAction}>
+    <form className={`${styles.main}`} action={formAction}>
       {state.errors.length > 0 && (
         <ul
           style={{
