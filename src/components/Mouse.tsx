@@ -1,4 +1,4 @@
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useEffect, useState, useTransition } from "react";
 
 type Coordinates = {
   x: number;
@@ -14,14 +14,17 @@ const Mouse = ({
     x: 0,
     y: 0,
   });
+  const [isPending, startTransition] = useTransition();
 
   useEffect(() => {
     const body = document.querySelector("body");
     if (body) {
       body.onmousemove = (e) => {
-        setCoordinates({
-          x: e.clientX,
-          y: e.clientY,
+        startTransition(() => {
+          setCoordinates({
+            x: e.clientX,
+            y: e.clientY,
+          });
         });
       };
     }

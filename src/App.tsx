@@ -1,17 +1,31 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import {
+  Suspense,
+  lazy,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+  useTransition,
+} from "react";
 import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
 import "./App.css";
-import FormExemple from "./components/FormExemple";
+
 import ErrorBoundary from "./components/ErrorBoundary";
 import usePersitedState from "./lib/hooks/useLocalState";
 import useProducts from "./lib/stores/products";
 import ProductsListTitle from "./components/ProductsListTitle";
 import useCart from "./lib/stores/cart";
 import Mouse from "./components/Mouse";
-
+const FormExemple = lazy(
+  () =>
+    new Promise<any>((resolve) => {
+      setTimeout(() => resolve(import("./components/FormExemple")), 3000);
+    })
+);
 function App() {
   const [count, setCount] = usePersitedState<number>("count", 0);
+  const [isPending, startTransition] = useTransition();
 
   const { products, loading, isLoaded, error, fetchData } = useProducts();
   const [maxId, setMaxId] = useState(5);
@@ -30,7 +44,9 @@ function App() {
 
   useEffect(() => {
     if (!isLoaded) {
-      fetchData();
+      startTransition(() => {
+        fetchData();
+      });
     }
   }, [isLoaded, fetchData]);
 
@@ -59,7 +75,9 @@ function App() {
         </p>
       </div>
       <ErrorBoundary>
-        <FormExemple />
+        <Suspense fallback={<p>Lazy loading...</p>}>
+          <FormExemple />
+        </Suspense>
       </ErrorBoundary>
 
       <p className="read-the-docs">
