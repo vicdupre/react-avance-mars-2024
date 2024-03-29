@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"] });
+import "./globals.css";
+import Image from "next/image";
+
+const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -18,6 +20,12 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <p> I'm the root layout</p>
+        <Image
+          src={"/formation-next-js.png"}
+          alt="Logo"
+          width={100}
+          height={70}
+        />
         {children}
       </body>
     </html>

@@ -1,4 +1,5 @@
 import { Product } from "@/lib/types";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 
 type Props = Readonly<{
@@ -9,6 +10,7 @@ type Props = Readonly<{
 
 const getArticle = async (id: string): Promise<Product> => {
   try {
+    await new Promise<void>((resolve) => setTimeout(resolve, 3000));
     const res = await fetch("https://fakestoreapi.com/products/" + id);
     const json = await res.json();
     return json;
@@ -28,7 +30,12 @@ const Article = async ({ params: { id } }: Props) => {
         <p> Category : {product.category} </p>
         <p> Rating : {product.rating.rate} </p>
         <p> Rating count : {product.rating.count} </p>
-        <img src={product.image} alt={product.title} />
+        <Image
+          src={product.image}
+          alt={product.title}
+          width={200}
+          height={200}
+        />
       </div>
     </main>
   );
