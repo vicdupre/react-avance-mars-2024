@@ -10,11 +10,11 @@ type Props = Readonly<{
 
 const getArticle = async (id: string): Promise<Product> => {
   try {
-    await new Promise<void>((resolve) => setTimeout(resolve, 3000));
-    const res = await fetch("https://fakestoreapi.com/products/" + id);
+    const res = await fetch(process.env.APP_URL + "/api/articles/" + id);
     const json = await res.json();
     return json;
   } catch (error) {
+    console.log(error);
     notFound();
   }
 };
