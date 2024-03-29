@@ -1,6 +1,7 @@
 import { Products } from "@/lib/types";
 import ErrorButton from "@/ui/Buttons/ErrorButton";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 
 const getArticles = async (): Promise<Products> => {
   // await new Promise<void>((resolve) => setTimeout(resolve, 3000));
@@ -22,7 +23,16 @@ const Articles = async () => {
           </li>
         ))}
       </ul>
-      <ErrorButton />
+      <form>
+        <button
+          formAction={async () => {
+            "use server";
+            throw new Error("Error Thrown");
+          }}
+        >
+          Throw Error
+        </button>
+      </form>
     </div>
   );
 };

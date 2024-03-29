@@ -12,3 +12,11 @@ export interface Product {
 }
 
 export type Products = Product[];
+
+export interface Post {
+  _id: string;
+  title: string;
+  content: string;
+}
+
+export type Posts = Post[];
