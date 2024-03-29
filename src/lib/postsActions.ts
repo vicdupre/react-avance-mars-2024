@@ -13,7 +13,7 @@ const PostSchema = z.object({
 
 const NewPost = PostSchema.omit({ _id: true });
 
-export const createPost = async (formData: FormData) => {
+export const createPost = async (prevData: any, formData: FormData) => {
   const data = Object.fromEntries(formData);
   try {
     const verifiedData = NewPost.parse(data);
@@ -31,8 +31,17 @@ export const createPost = async (formData: FormData) => {
       throw new Error("Erreur lors de l'enregistrement");
     }
   } catch (error) {
-    console.error(error);
-    throw new Error("Erreur");
+    if (error instanceof z.ZodError) {
+      return {
+        errors: error.errors.map((e) => e.message),
+        errorCount: prevData.errorCount + 1,
+      };
+    }
+
+    return {
+      errors: ["Une erreur est survenue"],
+      errorCount: prevData.errorCount + 1,
+    };
   }
 
   revalidatePath("/posts");

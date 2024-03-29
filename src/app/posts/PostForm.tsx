@@ -6,7 +6,14 @@ import SubmitButton from "@/ui/Buttons/SubmitButton";
 import { useFormState } from "react-dom";
 
 type Props = {
-  post: Post;
+  post?: Post;
+  action: (
+    prevData: any,
+    formData: FormData
+  ) => Promise<{
+    errors: string[];
+    errorCount: number;
+  }>;
 };
 
 const initialState = {
@@ -14,13 +21,11 @@ const initialState = {
   errorCount: 0,
 };
 
-const UpdatePostForm = ({ post }: Props) => {
-  const updatePostWithId = updatePost.bind(null, post._id);
-
-  const [state, action] = useFormState(updatePostWithId, initialState);
+const PostForm = ({ post, action }: Props) => {
+  const [state, formAction] = useFormState(action, initialState);
 
   return (
-    <form action={action}>
+    <form action={formAction}>
       {state.errors.length > 0 && (
         <ul
           style={{
@@ -42,18 +47,18 @@ const UpdatePostForm = ({ post }: Props) => {
         name="title"
         id="title"
         required
-        defaultValue={post.title}
+        defaultValue={post?.title}
       />
       <label htmlFor="content">Contenu</label>
       <textarea
         name="content"
         id="title"
         required
-        defaultValue={post.content}
+        defaultValue={post?.content}
       ></textarea>
       <SubmitButton />
     </form>
   );
 };
 
-export default UpdatePostForm;
+export default PostForm;

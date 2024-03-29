@@ -1,5 +1,5 @@
-import { getPost } from "@/lib/postsActions";
-import UpdatePostForm from "./UpdatePostForm";
+import { getPost, updatePost } from "@/lib/postsActions";
+import PostForm from "../PostForm";
 
 const UpdatePost = async ({
   params: { id },
@@ -9,11 +9,11 @@ const UpdatePost = async ({
   };
 }) => {
   const post = await getPost(id);
-
+  const updatePostWithId = updatePost.bind(null, post._id);
   return (
     <div>
       <h1>Post</h1>
-      <UpdatePostForm post={post} />
+      <PostForm post={post} action={updatePostWithId} />
     </div>
   );
 };
